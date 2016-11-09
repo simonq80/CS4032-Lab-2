@@ -6,6 +6,7 @@ import Network.Socket
 import Options.Applicative
 import Control.Concurrent
 import Control.Exception
+import Data.List.Split
 
 main = do
     putStrLn "Server Port:"
@@ -37,12 +38,15 @@ handleConn (s, _) id = do
 
 
 parseMessage :: Socket -> ThreadId -> String -> IO ()
-parseMessage s id "GET /echo.php?message=asdf HTTP/1.1\r\n\r\n" = do
+parseMessage s id "GET /echo.php?message=kill_service HTTP/1.1\r\n\r\n" = do
     putStrLn "HELO sent"
     send s "qwertyuiop"
     throwTo id ThreadKilled
     close s
-parseMessage s _ "KILL_SERVICE\n" = do
+parseMessage s _ "GET /echo.php?message=helo_text HTTP/1.1\r\n\r\n" = do
+    name <- getSocketName s
+    putStrLn ((splitOn ":" (show name))!!0)
+    putStrLn ((splitOn ":" (show name))!!1)
     putStrLn "KILL sent"
     send s "sevice killed"
     close s
