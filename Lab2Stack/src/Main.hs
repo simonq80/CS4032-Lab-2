@@ -8,23 +8,27 @@ import Control.Parallel
 main = do
 	putStrLn "Server Port:"
 	port <- getLine
-	s <- createConnection ip (read port)
-	m <- sendMess s message
-	putStrLn "Returned:"
-	B8.putStrLn m
+	s <- createConnection (read port)
+	connLoop s
 
 createConnection:: Int -> IO Socket
 createConnection p = do 
 	s <- socket AF_INET Stream 0
-	setSocketOption sock ReuseAddr 1
-`	bind sock (SockAddrInet p iNADDR_ANY)
+	setSocketOption s ReuseAddr 1
+	bind s (SockAddrInet (read $ show p) iNADDR_ANY)
 	listen s 10
 	return s
 
 connLoop :: Socket -> IO ()
 connLoop s = do
+	putStrLn "in connLoop"
 	conn <- accept s
-	par (handleConn conn) (connLoop s)
+	handleConn conn
+	connLoop s
 
 handleConn :: (Socket, SockAddr) -> IO ()
+handleConn (s, _) = do
+    putStrLn "handling conn"
+    send s "Hello!\n"
+    close s
 	
