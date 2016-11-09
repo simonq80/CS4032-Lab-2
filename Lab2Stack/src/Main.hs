@@ -1,4 +1,5 @@
 module Main where
+import System.Exit
 import System.IO
 import qualified Data.ByteString.Char8 as B8
 import Network.Socket
@@ -23,20 +24,21 @@ connLoop :: Socket -> IO ()
 connLoop s = do
     putStrLn "in connLoop"
     conn <- accept s
-    _ <- forkIO $ handleConn conn
+    forkIO $ handleConn conn myThreadId
     connLoop s
 
-handleConn :: (Socket, SockAddr) -> IO ()
-handleConn (s, _) = do
+handleConn :: (Socket, SockAddr) -> IO ThreadId -> IO ()
+handleConn (s, _) _ = do
     putStrLn "handling conn" 
     input <- recv s 2048
     parseMessage s input
 
 
 parseMessage :: Socket -> String -> IO ()
-parseMessage s "HELO text\n" = do
+parseMessage s "GET /echo.php?message=asdf HTTP/1.1\r\n\r\n" = do
     putStrLn "HELO sent"
     send s "qwertyuiop"
+    error "server exit"
     close s
 parseMessage s "KILL_SERVICE\n" = do
     putStrLn "KILL sent"
