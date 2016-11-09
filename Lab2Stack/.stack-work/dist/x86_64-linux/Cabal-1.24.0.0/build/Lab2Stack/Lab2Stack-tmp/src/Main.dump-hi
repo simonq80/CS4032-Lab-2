@@ -1,10 +1,10 @@
 
 ==================== FINAL INTERFACE ====================
-2016-11-09 17:08:42.235553 UTC
+2016-11-09 17:26:19.45972 UTC
 
 interface main@main:Main 8001
-  interface hash: bb0730bfd5151db359f74a93417a4c35
-  ABI hash: 81099060c8654bc1b03e452b0fafb9a5
+  interface hash: 989e4943294221cd9f23258b3597ffe9
+  ABI hash: ce8196cd22366301bda8bb7f3d1be75c
   export-list hash: 25e7b0ac1d2fd6ada22483fd99979fc6
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 6f9b46074b8e07742d1390f2d38a30d1
@@ -39,9 +39,10 @@ family instance modules: base-4.9.0.0:Control.Applicative
                          base-4.9.0.0:GHC.Exts base-4.9.0.0:GHC.Generics
                          base-4.9.0.0:GHC.IO.Exception base-4.9.0.0:GHC.TypeLits
 import  -/  base-4.9.0.0:Control.Concurrent 98a3a12a2ace3d27758947d9f1041f90
+import  -/  base-4.9.0.0:Control.Exception 8762ca621bc15a8c1e8e34c703aba1aa
 import  -/  base-4.9.0.0:GHC.Base 8ed3be81c0707b322f975a84ae1bb816
 import  -/  base-4.9.0.0:GHC.Conc.Sync 800ad52ae188c67fd514a07ba8a64fcc
-import  -/  base-4.9.0.0:GHC.Err 3bba35a16538d33d424682ce66876cdd
+import  -/  base-4.9.0.0:GHC.IO.Exception 6616e78328d3d532254cd5e593c9c639
 import  -/  base-4.9.0.0:GHC.Show 952347a6ab730bcb25c0854d8bc6ca51
 import  -/  base-4.9.0.0:Prelude b9bddb97799837fe67a8d00939a5b6c3
 import  -/  base-4.9.0.0:System.Exit 4df7be78e54bbe200276120bd44e7e2a
@@ -64,20 +65,22 @@ d6831ef04cb9301b090dfae6f7bb7ec7
   $trModule2 :: GHC.Types.TrName
   {- HasNoCafRefs, Strictness: m1,
      Unfolding: (GHC.Types.TrNameS "main"#) -}
-605aaca32bd4a2b8f78618b23175dfa7
+0b03bc495d53d6fddd280836ac3707e1
   $whandleConn ::
     Network.Socket.Types.Socket
+    -> GHC.Conc.Sync.ThreadId
     -> GHC.Prim.State# GHC.Prim.RealWorld
     -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
-  {- Arity: 2, Strictness: <L,1*U(U(U),A,A,A,U(U))><S,U>,
+  {- Arity: 3, Strictness: <L,1*U(U(U),A,A,A,U(U))><L,1*U(U)><S,U>,
      Inline: [0],
      Unfolding: (\ (ww :: Network.Socket.Types.Socket)
-                   (w :: GHC.Prim.State# GHC.Prim.RealWorld)[OneShot] ->
+                   (w :: GHC.Conc.Sync.ThreadId)
+                   (w1 :: GHC.Prim.State# GHC.Prim.RealWorld)[OneShot] ->
                  case GHC.IO.Handle.Text.hPutStr2
                         GHC.IO.Handle.FD.stdout
                         Main.handleConn12
                         GHC.Types.True
-                        w of ds1 { (#,#) ipv ipv1 ->
+                        w1 of ds1 { (#,#) ipv ipv1 ->
                  case ww of ww1 { Network.Socket.Types.MkSocket ww2 ww3 ww4 ww5 ww6 ->
                  case GHC.Prim.newPinnedByteArray#
                         @ GHC.Prim.RealWorld
@@ -110,7 +113,7 @@ d6831ef04cb9301b090dfae6f7bb7ec7
                         @ GHC.Prim.ByteArray#
                         ipv5
                         ipv8 of s4 { DEFAULT ->
-                 Main.handleConn2 ww1 ipv9 s4 } } } } } } }) -}
+                 Main.handleConn2 ww1 w ipv9 s4 } } } } } } }) -}
 a09b78c3d9e8b00275c712ca482e3aa6
   connLoop :: Network.Socket.Types.Socket -> GHC.Types.IO ()
   {- Arity: 2, Strictness: <L,1*U(U(U),U,U,U(U),U(U))><S,U>,
@@ -271,31 +274,33 @@ ac1060b5584bd868cd7de4aca3441a89
                       <Network.Socket.Types.PortNumber>_R)
                    @ Network.Socket.Types.PortNumber
                    (Text.Read.readEither5 @ Network.Socket.Types.PortNumber)) -}
-4257d16cf9b25e014f96f0c7d9aceb02
+dd059b22026d62510b0457e180cca724
   handleConn ::
     (Network.Socket.Types.Socket, Network.Socket.Types.SockAddr)
-    -> GHC.Types.IO GHC.Conc.Sync.ThreadId -> GHC.Types.IO ()
-  {- Arity: 3, Strictness: <S,1*U(1*U(U(U),A,A,A,U(U)),A)><L,A><S,U>,
+    -> GHC.Conc.Sync.ThreadId -> GHC.Types.IO ()
+  {- Arity: 3,
+     Strictness: <S,1*U(1*U(U(U),A,A,A,U(U)),A)><L,1*U(U)><S,U>,
      Unfolding: InlineRule (0, True, True)
                 Main.handleConn1
                   `cast`
                 (<(Network.Socket.Types.Socket, Network.Socket.Types.SockAddr)>_R
-                 ->_R <GHC.Types.IO GHC.Conc.Sync.ThreadId>_R
+                 ->_R <GHC.Conc.Sync.ThreadId>_R
                  ->_R Sym (GHC.Types.N:IO[0] <()>_R)) -}
-9908e2088ce88c1ca380145d055a6c6c
+0d10f0248575da7591833b78f5ad374f
   handleConn1 ::
     (Network.Socket.Types.Socket, Network.Socket.Types.SockAddr)
-    -> GHC.Types.IO GHC.Conc.Sync.ThreadId
+    -> GHC.Conc.Sync.ThreadId
     -> GHC.Prim.State# GHC.Prim.RealWorld
     -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
-  {- Arity: 3, Strictness: <S,1*U(1*U(U(U),A,A,A,U(U)),A)><L,A><S,U>,
+  {- Arity: 3,
+     Strictness: <S,1*U(1*U(U(U),A,A,A,U(U)),A)><L,1*U(U)><S,U>,
      Inline: INLINE[0],
      Unfolding: InlineRule (3, True, False)
                 (\ (w :: (Network.Socket.Types.Socket,
                           Network.Socket.Types.SockAddr))
-                   (w1 :: GHC.Types.IO GHC.Conc.Sync.ThreadId)
+                   (w1 :: GHC.Conc.Sync.ThreadId)
                    (w2 :: GHC.Prim.State# GHC.Prim.RealWorld)[OneShot] ->
-                 case w of ww { (,) ww1 ww2 -> Main.$whandleConn ww1 w2 }) -}
+                 case w of ww { (,) ww1 ww2 -> Main.$whandleConn ww1 w1 w2 }) -}
 e289658b4774a3dff6bf88b17f7dbfa2
   handleConn10 :: [GHC.Types.Char]
   {- Unfolding: (GHC.CString.unpackCString# "KILL_SERVICE\n"#) -}
@@ -307,14 +312,17 @@ a725a22d756f3cfc9542a9bbbfa2bd02
 53e4fd7945df496dfc7839d05d238241
   handleConn12 :: [GHC.Types.Char]
   {- Unfolding: (GHC.CString.unpackCString# "handling conn"#) -}
-e431d5c061b6bfab8c7f009a657142b3
+d248841719bbfba673efe8fcd52ccb11
   handleConn2 ::
     Network.Socket.Types.Socket
+    -> GHC.Conc.Sync.ThreadId
     -> [GHC.Types.Char]
     -> GHC.Prim.State# GHC.Prim.RealWorld
     -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
-  {- Arity: 3, Strictness: <L,U(U(U),A,A,A,1*U(U))><S,U><S,U>,
+  {- Arity: 4,
+     Strictness: <L,U(U(U),A,A,A,1*U(U))><L,1*U(U)><S,U><S,U>,
      Unfolding: (\ (s :: Network.Socket.Types.Socket)
+                   (id :: GHC.Conc.Sync.ThreadId)
                    (ds :: [GHC.Types.Char])
                    (eta :: GHC.Prim.State# GHC.Prim.RealWorld)[OneShot] ->
                  case GHC.Base.eqString ds Main.handleConn11 of wild {
@@ -389,12 +397,19 @@ e431d5c061b6bfab8c7f009a657142b3
                              (<(GHC.Ptr.Ptr Foreign.C.Types.CChar, GHC.Types.Int)>_R
                               ->_R Sym (GHC.Types.N:IO[0] <GHC.Types.Int>_R))
                              ipv of ds2 { (#,#) ipv2 ipv3 ->
-                      case Main.handleConn3
-                      ret_ty (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
-                      of {} } } }) -}
-4c97ca17968c4d68db50380e60ed1e81
-  handleConn3 :: GHC.Types.IO GHC.Prim.Any
-  {- Strictness: x -}
+                      case id of wild1 { GHC.Conc.Sync.ThreadId tid ->
+                      case GHC.Prim.killThread#
+                             @ GHC.Exception.SomeException
+                             tid
+                             Main.handleConn3
+                             ipv2 of s1 { DEFAULT ->
+                      case s of ww { Network.Socket.Types.MkSocket ww1 ww2 ww3 ww4 ww5 ->
+                      case ww5 of ww6 { GHC.MVar.MVar ww7 ->
+                      Network.Socket.$wclose ww1 ww7 s1 } } } } } } }) -}
+6625f2343dc4d166cefb6d99fbfdefd7
+  handleConn3 :: GHC.Exception.SomeException
+  {- Unfolding: (GHC.IO.Exception.$fExceptionAsyncException_$ctoException
+                   GHC.IO.Exception.ThreadKilled) -}
 fa6c536eeb7063f75b176d0592bfc878
   handleConn4 :: [GHC.Types.Char]
   {- Unfolding: (GHC.CString.unpackCString# "qwertyuiop"#) -}
@@ -488,14 +503,17 @@ c356bd6676f7c263267afb1e9ca53b75
      Unfolding: (GHC.TopHandler.runMainIO1
                    @ ()
                    Main.main1 `cast` (Sym (GHC.Types.N:IO[0] <()>_R))) -}
-d5164694e7aec101643c548090896040
+3380c9430dda9afe93d7800119004fb4
   parseMessage ::
-    Network.Socket.Types.Socket -> GHC.Base.String -> GHC.Types.IO ()
-  {- Arity: 3, Strictness: <L,U(U(U),A,A,A,1*U(U))><S,U><S,U>,
+    Network.Socket.Types.Socket
+    -> GHC.Conc.Sync.ThreadId -> GHC.Base.String -> GHC.Types.IO ()
+  {- Arity: 4,
+     Strictness: <L,U(U(U),A,A,A,1*U(U))><L,1*U(U)><S,U><S,U>,
      Unfolding: InlineRule (0, True, True)
                 Main.handleConn2
                   `cast`
                 (<Network.Socket.Types.Socket>_R
+                 ->_R <GHC.Conc.Sync.ThreadId>_R
                  ->_R <[GHC.Types.Char]>_R
                  ->_R Sym (GHC.Types.N:IO[0] <()>_R)) -}
 vectorised variables:

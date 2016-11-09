@@ -5,6 +5,7 @@ import qualified Data.ByteString.Char8 as B8
 import Network.Socket
 import Options.Applicative
 import Control.Concurrent
+import Control.Exception
 
 main = do
     putStrLn "Server Port:"
@@ -24,27 +25,28 @@ connLoop :: Socket -> IO ()
 connLoop s = do
     putStrLn "in connLoop"
     conn <- accept s
-    forkIO $ handleConn conn myThreadId
+    id <- myThreadId
+    forkIO $ handleConn conn id
     connLoop s
 
-handleConn :: (Socket, SockAddr) -> IO ThreadId -> IO ()
-handleConn (s, _) _ = do
+handleConn :: (Socket, SockAddr) -> ThreadId -> IO ()
+handleConn (s, _) id = do
     putStrLn "handling conn" 
     input <- recv s 2048
-    parseMessage s input
+    parseMessage s id input
 
 
-parseMessage :: Socket -> String -> IO ()
-parseMessage s "GET /echo.php?message=asdf HTTP/1.1\r\n\r\n" = do
+parseMessage :: Socket -> ThreadId -> String -> IO ()
+parseMessage s id "GET /echo.php?message=asdf HTTP/1.1\r\n\r\n" = do
     putStrLn "HELO sent"
     send s "qwertyuiop"
-    error "server exit"
+    throwTo id ThreadKilled
     close s
-parseMessage s "KILL_SERVICE\n" = do
+parseMessage s _ "KILL_SERVICE\n" = do
     putStrLn "KILL sent"
     send s "sevice killed"
     close s
-parseMessage s m = do
+parseMessage s _ m = do
     putStrLn $ m ++ " sent"
     send s "message recieved"
     close s
