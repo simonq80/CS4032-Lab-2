@@ -42,13 +42,6 @@
   (major1) == 0 && (major2) <  12 || \
   (major1) == 0 && (major2) == 12 && (minor) <= 1)
 
-/* package parallel-3.2.1.0 */
-#define VERSION_parallel "3.2.1.0"
-#define MIN_VERSION_parallel(major1,major2,minor) (\
-  (major1) <  3 || \
-  (major1) == 3 && (major2) <  2 || \
-  (major1) == 3 && (major2) == 2 && (minor) <= 1)
-
 /* tool gcc-4.9.2 */
 #define TOOL_VERSION_gcc "4.9.2"
 #define MIN_TOOL_VERSION_gcc(major1,major2,minor) (\
