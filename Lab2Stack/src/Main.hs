@@ -38,15 +38,15 @@ handleConn (s, _) id = do
 
 
 parseMessage :: Socket -> ThreadId -> String -> IO ()
-parseMessage s id "KILL_SERVICE\n" = do
+parseMessage s id ('K':'I':'L':'L':'_':'S':'E':'R':'V':'I':'C':'E':_) = do
     putStrLn "Shutting Down"
     throwTo id ThreadKilled
     close s
-parseMessage s _ "HELO text\n" = do
+parseMessage s _  ('H':'E':'L':'O':m) = do
     name <- getSocketName s
-    send s  ("HELO text\nIP:" ++ ((splitOn ":" (show name))!!0) ++ "\nPort:"++ ((splitOn ":" (show name))!!1) ++ "\nStudentID:13327420\n")
+    send s  ("HELO" ++ m ++ "IP:" ++ ((splitOn ":" (show name))!!0) ++ "\nPort:"++ ((splitOn ":" (show name))!!1) ++ "\nStudentID:13327420\n")
     putStrLn "Helo text sent"
     close s
 parseMessage s _ m = do
-    putStrLn "some other message recieved"
+    putStrLn ("some other message recieved(\"" ++ m ++ "\")")
     close s
