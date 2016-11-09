@@ -38,19 +38,15 @@ handleConn (s, _) id = do
 
 
 parseMessage :: Socket -> ThreadId -> String -> IO ()
-parseMessage s id "GET /echo.php?message=kill_service HTTP/1.1\r\n\r\n" = do
-    putStrLn "HELO sent"
-    send s "qwertyuiop"
+parseMessage s id "KILL_SERVICE\n" = do
+    putStrLn "Shutting Down"
     throwTo id ThreadKilled
     close s
-parseMessage s _ "GET /echo.php?message=helo_text HTTP/1.1\r\n\r\n" = do
+parseMessage s _ "HELO text\n" = do
     name <- getSocketName s
-    putStrLn ((splitOn ":" (show name))!!0)
-    putStrLn ((splitOn ":" (show name))!!1)
-    putStrLn "KILL sent"
-    send s "sevice killed"
+    send s  ("HELO text\nIP:" ++ ((splitOn ":" (show name))!!0) ++ "\nPort:"++ ((splitOn ":" (show name))!!1) ++ "\nStudentID:13327420\n")
+    putStrLn "Helo text sent"
     close s
 parseMessage s _ m = do
-    putStrLn $ m ++ " sent"
-    send s "message recieved"
+    putStrLn "some other message recieved"
     close s
