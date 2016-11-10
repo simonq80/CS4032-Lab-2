@@ -1,6 +1,7 @@
 module Main where
 import System.Exit
 import System.IO
+import System.Environment
 import qualified Data.ByteString.Char8 as B8
 import Network.Socket
 import Options.Applicative
@@ -9,8 +10,7 @@ import Control.Exception
 import Data.List.Split
 
 main = do
-    putStrLn "Server Port:"
-    port <- getLine
+    port:_ <- getArgs
     s <- createConnection (read port)
     connLoop s
 
