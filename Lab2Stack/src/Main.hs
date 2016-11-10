@@ -31,9 +31,8 @@ connLoop s = do
     connLoop s
 
 handleConn :: (Socket, SockAddr) -> ThreadId -> IO ()
-handleConn (s, _) id = do
-    putStrLn "handling conn" 
-    input <- recv s 2048
+handleConn (s, _) id = do 
+    input <- recv s 4096
     parseMessage s id input
 
 
