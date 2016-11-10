@@ -3,7 +3,8 @@ import System.Exit
 import System.IO
 import System.Environment
 import qualified Data.ByteString.Char8 as B8
-import Network.Socket
+import Network.Socket hiding (send, recv)
+import Network.Socket.ByteString
 import Options.Applicative
 import Control.Concurrent
 import Control.Exception
@@ -24,7 +25,6 @@ createConnection p = do
 
 connLoop :: Socket -> IO ()
 connLoop s = do
-    putStrLn "in connLoop"
     conn <- accept s
     id <- myThreadId
     forkIO $ handleConn conn id
@@ -33,19 +33,18 @@ connLoop s = do
 handleConn :: (Socket, SockAddr) -> ThreadId -> IO ()
 handleConn (s, _) id = do 
     input <- recv s 4096
-    parseMessage s id input
-
+    parseMessage s id (show input)
 
 parseMessage :: Socket -> ThreadId -> String -> IO ()
-parseMessage s id ('K':'I':'L':'L':'_':'S':'E':'R':'V':'I':'C':'E':_) = do
+parseMessage s id ('"':'K':'I':'L':'L':'_':'S':'E':'R':'V':'I':'C':'E':_) = do
     putStrLn "Shutting Down"
     throwTo id ThreadKilled
     close s
-parseMessage s _  ('H':'E':'L':'O':m) = do
+parseMessage s _  ('"':'H':'E':'L':'O':m) = do
     name <- getSocketName s
-    send s  ("HELO" ++ m ++ "IP:" ++ ((splitOn ":" (show name))!!0) ++ "\nPort:"++ ((splitOn ":" (show name))!!1) ++ "\nStudentID:13327420\n")
+    send s  (B8.pack $ ("HELO" ++ (take ((length m) -1)  m) ++ "IP:" ++ ((splitOn ":" (show name))!!0) ++ "\nPort:"++ ((splitOn ":" (show name))!!1) ++ "\nStudentID:13327420\n"))
     putStrLn "Helo text sent"
     close s
 parseMessage s _ m = do
-    putStrLn ("some other message recieved(\"" ++ m ++ "\")")
+    putStrLn ("some other message recieved(" ++ m ++ ")")
     close s
