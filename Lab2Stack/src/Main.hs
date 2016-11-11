@@ -9,11 +9,13 @@ import Options.Applicative
 import Control.Concurrent
 import Control.Exception
 import Data.List.Split
+import Control.Concurrent.MVar
 
 main = do
     port:_ <- getArgs
     s <- createConnection (read port)
-    connLoop s
+    mvar <- newMVar 0
+    connLoop s mvar
 
 createConnection:: Int -> IO Socket
 createConnection p = do 
@@ -23,18 +25,31 @@ createConnection p = do
     listen s 10
     return s
 
-connLoop :: Socket -> IO ()
-connLoop s = do
-    conn <- accept s
+connLoop :: Socket -> MVar Int -> IO ()
+connLoop s mvar = do
+    (soc, socA) <- accept s
     id <- myThreadId
-    forkIO $ handleConn conn id
-    connLoop s
+    mval <- takeMVar mvar
+    if (mval <=8)
+        then putMVar mvar (mval+1)
+        else putMVar mvar mval
+    if (mval <=8)
+        then forkIO $ handleConn mvar (soc, socA) id
+        else forkIO $ close soc
+    connLoop s mvar
 
-handleConn :: (Socket, SockAddr) -> ThreadId -> IO ()
-handleConn (s, sa) id = do 
+handleConn :: MVar Int -> (Socket, SockAddr) -> ThreadId -> IO ()
+handleConn mvar (s, sa) id = do 
     input <- recv s 4096
     parseMessage s id (B8.unpack input)
-    handleConn (s, sa) id
+    mval <- takeMVar mvar
+    tid <- myThreadId
+    if (length (B8.unpack input) == 0)
+        then putMVar mvar (mval-1)
+        else putMVar mvar mval
+    if (length (B8.unpack input) == 0)
+        then (close s) >> (killThread tid)
+        else handleConn mvar (s, sa) id
 
 
 parseMessage :: Socket -> ThreadId -> String -> IO ()
