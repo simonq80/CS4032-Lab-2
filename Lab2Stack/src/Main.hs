@@ -39,7 +39,7 @@ handleConn (s, sa) id = do
 
 parseMessage :: Socket -> ThreadId -> String -> IO ()
 parseMessage s id [] = do
-    return ()
+    threadDelay 10000
 parseMessage s id ('K':'I':'L':'L':'_':'S':'E':'R':'V':'I':'C':'E':_) = do
     putStrLn "Shutting Down"
     throwTo id ThreadKilled
