@@ -1,10 +1,10 @@
 
 ==================== FINAL INTERFACE ====================
-2016-11-11 00:13:07.924631 UTC
+2016-11-11 00:23:56.206985 UTC
 
 interface main@main:Main 8001
-  interface hash: 5f070b36a5996828c6a1bdfbe487f3c5
-  ABI hash: b4768fb11e5e919fb811ae1bcd4c0505
+  interface hash: ecff06ea0b25b22a664c966a8ccae13d
+  ABI hash: 8b6d34065d4df1af93d13c4ed015bad5
   export-list hash: 643745b7e1feccd08c72e8f089d267d4
   orphan hash: 693e9af84d3dfcc71e640e005bdc5e2e
   flag hash: 6f9b46074b8e07742d1390f2d38a30d1
@@ -41,12 +41,10 @@ family instance modules: base-4.9.0.0:Control.Applicative
                          base-4.9.0.0:GHC.IO.Exception base-4.9.0.0:GHC.TypeLits
 import  -/  base-4.9.0.0:Control.Concurrent 98a3a12a2ace3d27758947d9f1041f90
 import  -/  base-4.9.0.0:Control.Exception 8762ca621bc15a8c1e8e34c703aba1aa
-import  -/  base-4.9.0.0:Data.Foldable 8aeb682f6c74f97fcf0ace0d608a43ea
 import  -/  base-4.9.0.0:GHC.Base 8ed3be81c0707b322f975a84ae1bb816
 import  -/  base-4.9.0.0:GHC.Conc.Sync 800ad52ae188c67fd514a07ba8a64fcc
 import  -/  base-4.9.0.0:GHC.IO.Exception 6616e78328d3d532254cd5e593c9c639
 import  -/  base-4.9.0.0:GHC.List 13d2451194c1c6e53b4f4f07947736dd
-import  -/  base-4.9.0.0:GHC.Num 48f506a8f4ecf06285d0a0706594dcc0
 import  -/  base-4.9.0.0:GHC.Show 952347a6ab730bcb25c0854d8bc6ca51
 import  -/  base-4.9.0.0:Prelude b9bddb97799837fe67a8d00939a5b6c3
 import  -/  base-4.9.0.0:System.Environment ee0914a962f5508d0fd404c89ee4999b
@@ -374,12 +372,12 @@ acdc1956da2c90dfbae3809528000c4e
      Unfolding: (GHC.TopHandler.runMainIO1
                    @ ()
                    Main.main1 `cast` (Sym (GHC.Types.N:IO[0] <()>_R))) -}
-c69911c2dcf1ac88fd686603a6745fab
+1d871f198e18b847280edf9006b436ad
   parseMessage ::
     Network.Socket.Types.Socket
     -> GHC.Conc.Sync.ThreadId -> GHC.Base.String -> GHC.Types.IO ()
   {- Arity: 4,
-     Strictness: <L,1*U(1*U(U),1*U,A,A,A)><L,1*U(U)><S,U><S,U>,
+     Strictness: <L,1*U(1*U(U),1*U,A,A,A)><L,1*U(U)><S,1*U><S,U>,
      Unfolding: InlineRule (0, True, True)
                 Main.parseMessage1
                   `cast`
@@ -387,7 +385,7 @@ c69911c2dcf1ac88fd686603a6745fab
                  ->_R <GHC.Conc.Sync.ThreadId>_R
                  ->_R <[GHC.Types.Char]>_R
                  ->_R Sym (GHC.Types.N:IO[0] <()>_R)) -}
-596fd296bf0eb46adeefeb8e83093a74
+fefc97ac1f4da8f5d3b0f332ee0b9b40
   parseMessage1 ::
     Network.Socket.Types.Socket
     -> GHC.Conc.Sync.ThreadId
@@ -395,7 +393,7 @@ c69911c2dcf1ac88fd686603a6745fab
     -> GHC.Prim.State# GHC.Prim.RealWorld
     -> (# GHC.Prim.State# GHC.Prim.RealWorld, () #)
   {- Arity: 4,
-     Strictness: <L,1*U(1*U(U),1*U,A,A,A)><L,1*U(U)><S,U><S,U> -}
+     Strictness: <L,1*U(1*U(U),1*U,A,A,A)><L,1*U(U)><S,1*U><S,U> -}
 vectorised variables:
 vectorised tycons:
 vectorised reused tycons:

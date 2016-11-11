@@ -33,19 +33,19 @@ connLoop s = do
 handleConn :: (Socket, SockAddr) -> ThreadId -> IO ()
 handleConn (s, sa) id = do 
     input <- recv s 4096
-    parseMessage s id (show input)
+    parseMessage s id (B8.unpack input)
     handleConn (s, sa) id
 
 
 parseMessage :: Socket -> ThreadId -> String -> IO ()
-parseMessage s id ('"':'"':_)= do 
-	return ()
-parseMessage s id ('"':'K':'I':'L':'L':'_':'S':'E':'R':'V':'I':'C':'E':_) = do
+parseMessage s id [] = do
+    return ()
+parseMessage s id ('K':'I':'L':'L':'_':'S':'E':'R':'V':'I':'C':'E':_) = do
     putStrLn "Shutting Down"
     throwTo id ThreadKilled
-parseMessage s _  ('"':'H':'E':'L':'O':m) = do
+parseMessage s _  ('H':'E':'L':'O':m) = do
     name <- getSocketName s
-    send s  (B8.pack $ ("HELO" ++ (take ((length m) -1)  m) ++ "IP:" ++ ((splitOn ":" (show name))!!0) ++ "\nPort:"++ ((splitOn ":" (show name))!!1) ++ "\nStudentID:13327420\n"))
+    send s  (B8.pack $ ("HELO" ++ m ++ "IP:" ++ ((splitOn ":" (show name))!!0) ++ "\nPort:"++ ((splitOn ":" (show name))!!1) ++ "\nStudentID:13327420\n"))
     putStrLn "Helo text sent"
 parseMessage s _ m = do
     putStrLn ("some other message recieved(" ++ m ++ ")")
